@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM template for local testing of GEAV Site API
+
+Parameters:
+  Environment:
+    Type: String
+    Default: local
+    Description: Environment (local, dev, or prod)
+
+  DBHost:
+    Type: String
+    Default: localhost
+    Description: Database host
+
+  DBPort:
+    Type: String
+    Default: 5432
+    Description: Database port
+
+  DBUsername:
+    Type: String
+    Default: postgres
+    Description: Database username
+
+  DBPassword:
+    Type: String
+    Default: postgres
+    Description: Database password
+
+  DBName:
+    Type: String
+    Default: geav
+    Description: Database name
+
+Resources:
+  UsersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./build
+      Handler: users
+      Runtime: go1.x
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_PORT: !Ref DBPort
+          DB_USER: !Ref DBUsername
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          ENVIRONMENT: !Ref Environment
+
+  LugaresFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./build
+      Handler: lugares
+      Runtime: go1.x
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_PORT: !Ref DBPort
+          DB_USER: !Ref DBUsername
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          ENVIRONMENT: !Ref Environment
+
+  CancoesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./build
+      Handler: cancoes
+      Runtime: go1.x
+      Environment:
+        Variables:
+          DB_HOST: !Ref DBHost
+          DB_PORT: !Ref DBPort
+          DB_USER: !Ref DBUsername
+          DB_PASSWORD: !Ref DBPassword
+          DB_NAME: !Ref DBName
+          ENVIRONMENT: !Ref Environment

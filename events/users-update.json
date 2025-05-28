@@ -1,0 +1,22 @@
+﻿{
+  "resource": "/users/{id}",
+  "path": "/users/1",
+  "httpMethod": "PUT",
+  "headers": {
+    "Accept": "*/*",
+    "Content-Type": "application/json",
+    "x-request-id": "test-request-id"
+  },
+  "queryStringParameters": null,
+  "pathParameters": {
+    "id": "1"
+  },
+  "requestContext": {
+    "resourceId": "123456",
+    "resourcePath": "/users/{id}",
+    "httpMethod": "PUT",
+    "requestId": "test-request-id"
+  },
+  "body": "{\"username\":\"updateduser\",\"password\":\"updatedpassword\",\"role\":\"write\"}",
+  "isBase64Encoded": false
+}

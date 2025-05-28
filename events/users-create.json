@@ -1,0 +1,20 @@
+﻿{
+  "resource": "/users",
+  "path": "/users",
+  "httpMethod": "POST",
+  "headers": {
+    "Accept": "*/*",
+    "Content-Type": "application/json",
+    "x-request-id": "test-request-id"
+  },
+  "queryStringParameters": null,
+  "pathParameters": null,
+  "requestContext": {
+    "resourceId": "123456",
+    "resourcePath": "/users",
+    "httpMethod": "POST",
+    "requestId": "test-request-id"
+  },
+  "body": "{\"username\":\"testuser\",\"password\":\"testpassword\",\"role\":\"read\"}",
+  "isBase64Encoded": false
+}
