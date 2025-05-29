@@ -13,10 +13,10 @@ type Cancao struct {
 	UserID      int       `json:"user_id" db:"user_id"`
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
-	
+
 	// Related entities (not stored in the database directly)
-	Tags  []TagCancao `json:"tags,omitempty" db:"-"`
-	Ramos []Ramo      `json:"ramos,omitempty" db:"-"`
+	Tags  []*TagCancao `json:"tags,omitempty" db:"-"`
+	Ramos []*Ramo      `json:"ramos,omitempty" db:"-"`
 }
 
 // NewCancao creates a new song with default values

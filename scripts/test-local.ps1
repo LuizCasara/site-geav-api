@@ -198,7 +198,6 @@ $env:DB_NAME = $DBName
 $env:ENVIRONMENT = "local"
 
 sam local invoke $Function"Function" `
-    --no-event-stdin `
     --event $eventFile `
     --parameter-overrides "ParameterKey=Environment,ParameterValue=local ParameterKey=DBHost,ParameterValue=$DBHost ParameterKey=DBPort,ParameterValue=$DBPort ParameterKey=DBUsername,ParameterValue=$DBUsername ParameterKey=DBPassword,ParameterValue=$DBPassword ParameterKey=DBName,ParameterValue=$DBName" `
     --template template.yaml `

@@ -1,0 +1,20 @@
+{
+  "resource": "/cancoes",
+  "path": "/cancoes",
+  "httpMethod": "POST",
+  "headers": {
+    "Accept": "*/*",
+    "Content-Type": "application/json",
+    "x-request-id": "test-request-id"
+  },
+  "queryStringParameters": null,
+  "pathParameters": null,
+  "requestContext": {
+    "resourceId": "123456",
+    "resourcePath": "/cancoes",
+    "httpMethod": "POST",
+    "requestId": "test-request-id"
+  },
+  "body": "{\"nome\":\"Canção de Teste\",\"link_youtube\":\"https://www.youtube.com/watch?v=test\",\"letra\":\"Letra da canção de teste\",\"user_id\":1}",
+  "isBase64Encoded": false
+}

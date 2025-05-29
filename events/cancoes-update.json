@@ -1,0 +1,22 @@
+{
+  "resource": "/cancoes/{id}",
+  "path": "/cancoes/1",
+  "httpMethod": "PUT",
+  "headers": {
+    "Accept": "*/*",
+    "Content-Type": "application/json",
+    "x-request-id": "test-request-id"
+  },
+  "queryStringParameters": null,
+  "pathParameters": {
+    "id": "1"
+  },
+  "requestContext": {
+    "resourceId": "123456",
+    "resourcePath": "/cancoes/{id}",
+    "httpMethod": "PUT",
+    "requestId": "test-request-id"
+  },
+  "body": "{\"nome\":\"Canção de Teste Atualizada\",\"link_youtube\":\"https://www.youtube.com/watch?v=test-updated\",\"letra\":\"Letra da canção de teste atualizada\",\"user_id\":1}",
+  "isBase64Encoded": false
+}

@@ -1,0 +1,21 @@
+{
+  "resource": "/cancoes/{id}",
+  "path": "/cancoes/1",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "*/*",
+    "x-request-id": "test-request-id"
+  },
+  "queryStringParameters": null,
+  "pathParameters": {
+    "id": "1"
+  },
+  "requestContext": {
+    "resourceId": "123456",
+    "resourcePath": "/cancoes/{id}",
+    "httpMethod": "GET",
+    "requestId": "test-request-id"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}

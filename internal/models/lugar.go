@@ -6,25 +6,25 @@ import (
 
 // Lugar represents a place in the system
 type Lugar struct {
-	ID                 int       `json:"id" db:"id"`
-	NomeLocal          string    `json:"nome_local" db:"nome_local"`
-	NomeDonoLocal      string    `json:"nome_dono_local" db:"nome_dono_local"`
+	ID                  int       `json:"id" db:"id"`
+	NomeLocal           string    `json:"nome_local" db:"nome_local"`
+	NomeDonoLocal       string    `json:"nome_dono_local" db:"nome_dono_local"`
 	TelefoneParaContato int64     `json:"telefone_para_contato" db:"telefone_para_contato"`
-	LinkGoogleMaps     string    `json:"link_google_maps" db:"link_google_maps"`
-	LinkSite           string    `json:"link_site" db:"link_site"`
-	EnderecoCompleto   string    `json:"endereco_completo" db:"endereco_completo"`
-	LocalPublico       bool      `json:"local_publico" db:"local_publico"`
-	ValorFixo          float64   `json:"valor_fixo" db:"valor_fixo"`
-	ValorIndividual    float64   `json:"valor_individual" db:"valor_individual"`
-	UserID             int       `json:"user_id" db:"user_id"`
-	CreatedAt          time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt          time.Time `json:"updated_at" db:"updated_at"`
-	
+	LinkGoogleMaps      string    `json:"link_google_maps" db:"link_google_maps"`
+	LinkSite            string    `json:"link_site" db:"link_site"`
+	EnderecoCompleto    string    `json:"endereco_completo" db:"endereco_completo"`
+	LocalPublico        bool      `json:"local_publico" db:"local_publico"`
+	ValorFixo           float64   `json:"valor_fixo" db:"valor_fixo"`
+	ValorIndividual     float64   `json:"valor_individual" db:"valor_individual"`
+	UserID              int       `json:"user_id" db:"user_id"`
+	CreatedAt           time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt           time.Time `json:"updated_at" db:"updated_at"`
+
 	// Related entities (not stored in the database directly)
-	Images []LugarImage `json:"images,omitempty" db:"-"`
-	Tags   []TagLugar   `json:"tags,omitempty" db:"-"`
-	Ramos  []Ramo       `json:"ramos,omitempty" db:"-"`
-	
+	Images []*LugarImage `json:"images,omitempty" db:"-"`
+	Tags   []*TagLugar   `json:"tags,omitempty" db:"-"`
+	Ramos  []*Ramo       `json:"ramos,omitempty" db:"-"`
+
 	// Calculated fields from the materialized view
 	AverageRating float64 `json:"average_rating,omitempty" db:"average_rating"`
 	RatingCount   int     `json:"rating_count,omitempty" db:"rating_count"`

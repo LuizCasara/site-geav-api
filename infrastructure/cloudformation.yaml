@@ -44,6 +44,7 @@ Resources:
   # VPC and Networking
   VPC:
     Type: AWS::EC2::VPC
+    DeletionPolicy: Retain
     Properties:
       CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
@@ -54,9 +55,10 @@ Resources:
 
   PublicSubnet1:
     Type: AWS::EC2::Subnet
+    DeletionPolicy: Retain
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [0, !GetAZs '']
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
       CidrBlock: 10.0.1.0/24
       MapPublicIpOnLaunch: true
       Tags:
@@ -65,9 +67,10 @@ Resources:
 
   PublicSubnet2:
     Type: AWS::EC2::Subnet
+    DeletionPolicy: Retain
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [1, !GetAZs '']
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
       CidrBlock: 10.0.2.0/24
       MapPublicIpOnLaunch: true
       Tags:
@@ -76,9 +79,10 @@ Resources:
 
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
+    DeletionPolicy: Retain
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [0, !GetAZs '']
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
       CidrBlock: 10.0.3.0/24
       Tags:
         - Key: Name
@@ -86,9 +90,10 @@ Resources:
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
+    DeletionPolicy: Retain
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [1, !GetAZs '']
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
       CidrBlock: 10.0.4.0/24
       Tags:
         - Key: Name
@@ -96,19 +101,22 @@ Resources:
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
+    DeletionPolicy: Retain
     Properties:
       Tags:
         - Key: Name
           Value: !Sub ${AWS::StackName}-igw
 
-  InternetGatewayAttachment:
+  VPCGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
+    DeletionPolicy: Retain
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
+    DeletionPolicy: Retain
     Properties:
       VpcId: !Ref VPC
       Tags:
@@ -117,7 +125,8 @@ Resources:
 
   PublicRoute:
     Type: AWS::EC2::Route
-    DependsOn: InternetGatewayAttachment
+    DeletionPolicy: Retain
+    DependsOn: VPCGatewayAttachment
     Properties:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
@@ -125,24 +134,28 @@ Resources:
 
   PublicSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    DeletionPolicy: Retain
     Properties:
       SubnetId: !Ref PublicSubnet1
       RouteTableId: !Ref PublicRouteTable
 
   PublicSubnet2RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    DeletionPolicy: Retain
     Properties:
       SubnetId: !Ref PublicSubnet2
       RouteTableId: !Ref PublicRouteTable
 
   NatGateway1EIP:
     Type: AWS::EC2::EIP
-    DependsOn: InternetGatewayAttachment
+    DeletionPolicy: Retain
+    DependsOn: VPCGatewayAttachment
     Properties:
       Domain: vpc
 
   NatGateway1:
     Type: AWS::EC2::NatGateway
+    DeletionPolicy: Retain
     Properties:
       AllocationId: !GetAtt NatGateway1EIP.AllocationId
       SubnetId: !Ref PublicSubnet1
@@ -152,6 +165,7 @@ Resources:
 
   PrivateRouteTable1:
     Type: AWS::EC2::RouteTable
+    DeletionPolicy: Retain
     Properties:
       VpcId: !Ref VPC
       Tags:
@@ -160,6 +174,7 @@ Resources:
 
   PrivateRoute1:
     Type: AWS::EC2::Route
+    DeletionPolicy: Retain
     Properties:
       RouteTableId: !Ref PrivateRouteTable1
       DestinationCidrBlock: 0.0.0.0/0
@@ -167,12 +182,14 @@ Resources:
 
   PrivateSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    DeletionPolicy: Retain
     Properties:
       SubnetId: !Ref PrivateSubnet1
       RouteTableId: !Ref PrivateRouteTable1
 
   PrivateSubnet2RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    DeletionPolicy: Retain
     Properties:
       SubnetId: !Ref PrivateSubnet2
       RouteTableId: !Ref PrivateRouteTable1
@@ -180,6 +197,7 @@ Resources:
   # Security Groups
   LambdaSecurityGroup:
     Type: AWS::EC2::SecurityGroup
+    DeletionPolicy: Retain
     Properties:
       GroupDescription: Security group for Lambda functions
       VpcId: !Ref VPC
@@ -189,6 +207,7 @@ Resources:
 
   DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
+    DeletionPolicy: Retain
     Properties:
       GroupDescription: Security group for RDS PostgreSQL
       VpcId: !Ref VPC
@@ -201,6 +220,7 @@ Resources:
   # RDS PostgreSQL
   DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
+    DeletionPolicy: Retain
     Properties:
       DBSubnetGroupDescription: Subnet group for RDS PostgreSQL
       SubnetIds:
@@ -209,6 +229,7 @@ Resources:
 
   PostgreSQLDB:
     Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
     Properties:
       DBName: !Ref DBName
       Engine: postgres
@@ -232,6 +253,7 @@ Resources:
   # Lambda Execution Role
   LambdaExecutionRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Retain
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -247,6 +269,7 @@ Resources:
   # Lambda Functions
   UsersFunction:
     Type: AWS::Lambda::Function
+    DeletionPolicy: Retain
     Properties:
       FunctionName: !Sub ${AWS::StackName}-users-${Environment}
       Handler: users
@@ -274,6 +297,7 @@ Resources:
 
   LugaresFunction:
     Type: AWS::Lambda::Function
+    DeletionPolicy: Retain
     Properties:
       FunctionName: !Sub ${AWS::StackName}-lugares-${Environment}
       Handler: lugares
@@ -301,6 +325,7 @@ Resources:
 
   CancoesFunction:
     Type: AWS::Lambda::Function
+    DeletionPolicy: Retain
     Properties:
       FunctionName: !Sub ${AWS::StackName}-cancoes-${Environment}
       Handler: cancoes
@@ -329,6 +354,7 @@ Resources:
   # API Gateway
   ApiGateway:
     Type: AWS::ApiGateway::RestApi
+    DeletionPolicy: Retain
     Properties:
       Name: !Sub ${AWS::StackName}-api-${Environment}
       Description: API for GEAV Site
@@ -339,13 +365,16 @@ Resources:
   # Users API Resources
   UsersResource:
     Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ParentId: !GetAtt ApiGateway.RootResourceId
       PathPart: users
+    UpdateReplacePolicy: Delete
 
   UserResource:
     Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ParentId: !Ref UsersResource
@@ -354,6 +383,7 @@ Resources:
   # Users API Methods
   UsersGetMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref UsersResource
@@ -366,6 +396,7 @@ Resources:
 
   UsersPostMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref UsersResource
@@ -378,6 +409,7 @@ Resources:
 
   UserGetMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref UserResource
@@ -390,6 +422,7 @@ Resources:
 
   UserPutMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref UserResource
@@ -402,6 +435,7 @@ Resources:
 
   UserDeleteMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref UserResource
@@ -415,6 +449,7 @@ Resources:
   # Lugares API Resources
   LugaresResource:
     Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ParentId: !GetAtt ApiGateway.RootResourceId
@@ -422,6 +457,7 @@ Resources:
 
   LugarResource:
     Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ParentId: !Ref LugaresResource
@@ -430,6 +466,7 @@ Resources:
   # Lugares API Methods
   LugaresGetMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref LugaresResource
@@ -442,6 +479,7 @@ Resources:
 
   LugaresPostMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref LugaresResource
@@ -454,6 +492,7 @@ Resources:
 
   LugarGetMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref LugarResource
@@ -466,6 +505,7 @@ Resources:
 
   LugarPutMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref LugarResource
@@ -478,6 +518,7 @@ Resources:
 
   LugarDeleteMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref LugarResource
@@ -491,6 +532,7 @@ Resources:
   # Cancoes API Resources
   CancoesResource:
     Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ParentId: !GetAtt ApiGateway.RootResourceId
@@ -498,6 +540,7 @@ Resources:
 
   CancaoResource:
     Type: AWS::ApiGateway::Resource
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ParentId: !Ref CancoesResource
@@ -506,6 +549,7 @@ Resources:
   # Cancoes API Methods
   CancoesGetMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref CancoesResource
@@ -518,6 +562,7 @@ Resources:
 
   CancoesPostMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref CancoesResource
@@ -530,6 +575,7 @@ Resources:
 
   CancaoGetMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref CancaoResource
@@ -542,6 +588,7 @@ Resources:
 
   CancaoPutMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref CancaoResource
@@ -554,6 +601,7 @@ Resources:
 
   CancaoDeleteMethod:
     Type: AWS::ApiGateway::Method
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       ResourceId: !Ref CancaoResource
@@ -567,6 +615,7 @@ Resources:
   # Lambda Permissions
   UsersLambdaPermission:
     Type: AWS::Lambda::Permission
+    DeletionPolicy: Retain
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Ref UsersFunction
@@ -575,6 +624,7 @@ Resources:
 
   LugaresLambdaPermission:
     Type: AWS::Lambda::Permission
+    DeletionPolicy: Retain
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Ref LugaresFunction
@@ -583,6 +633,7 @@ Resources:
 
   CancoesLambdaPermission:
     Type: AWS::Lambda::Permission
+    DeletionPolicy: Retain
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Ref CancoesFunction
@@ -592,6 +643,7 @@ Resources:
   # API Deployment
   ApiDeployment:
     Type: AWS::ApiGateway::Deployment
+    DeletionPolicy: Retain
     DependsOn:
       - UsersGetMethod
       - UsersPostMethod
@@ -612,15 +664,16 @@ Resources:
       RestApiId: !Ref ApiGateway
       StageName: !Ref Environment
 
-Outputs:
-  ApiEndpoint:
-    Description: API Gateway endpoint URL
-    Value: !Sub https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${Environment}
-
-  DatabaseEndpoint:
-    Description: PostgreSQL database endpoint
-    Value: !GetAtt PostgreSQLDB.Endpoint.Address
-
-  DatabasePort:
-    Description: PostgreSQL database port
-    Value: !GetAtt PostgreSQLDB.Endpoint.Port
+# Outputs section commented out for import operation
+# Outputs:
+#   ApiEndpoint:
+#     Description: API Gateway endpoint URL
+#     Value: !Sub https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${Environment}
+# 
+#   DatabaseEndpoint:
+#     Description: PostgreSQL database endpoint
+#     Value: !GetAtt PostgreSQLDB.Endpoint.Address
+# 
+#   DatabasePort:
+#     Description: PostgreSQL database port
+#     Value: !GetAtt PostgreSQLDB.Endpoint.Port

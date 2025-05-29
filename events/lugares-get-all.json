@@ -1,0 +1,19 @@
+{
+  "resource": "/lugares",
+  "path": "/lugares",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "*/*",
+    "x-request-id": "test-request-id"
+  },
+  "queryStringParameters": null,
+  "pathParameters": null,
+  "requestContext": {
+    "resourceId": "123456",
+    "resourcePath": "/lugares",
+    "httpMethod": "GET",
+    "requestId": "test-request-id"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}
